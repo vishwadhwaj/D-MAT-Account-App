@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class Db {
 
-	private static Db db=Db.getInstance();
+	private static Db db=new Db();
 	
 	private Db() {
 		try {
