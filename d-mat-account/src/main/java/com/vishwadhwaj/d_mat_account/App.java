@@ -3,14 +3,16 @@ package com.vishwadhwaj.d_mat_account;
 import java.util.*;
 
 import com.vishwadhwaj.d_mat_account.entities.Account;
+import com.vishwadhwaj.d_mat_account.service.AuthenticationService;
 
 public class App {
 
 	
 	Scanner scanner;
-
+	AuthenticationService authenticationService;
 	private App() {
 		scanner = new Scanner(System.in);
+		authenticationService=AuthenticationService.getInstance();
 	}
 
 	void MainMenu() {
@@ -44,8 +46,8 @@ public class App {
 	}
 
 	boolean register() {
+		Account account=new Account();
 		try {
-			Account account=new Account();
 			System.out.println("Enter your name:");
 			String name = scanner.nextLine();
 			System.out.println("Enter your account number:");
