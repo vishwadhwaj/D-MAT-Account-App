@@ -1,5 +1,6 @@
 package com.vishwadhwaj.d_mat_account.service;
 
+import com.vishwadhwaj.d_mat_account.dao.UserDao;
 import com.vishwadhwaj.d_mat_account.entities.Account;
 
 public class AuthenticationService {
@@ -12,6 +13,7 @@ public class AuthenticationService {
 		return authenticationService;
 	}
 	public boolean registerUser(Account account) {
-		return UserDao.createUser();
+		UserDao userDao=new UserDao();
+		return userDao.create(account);
 	}
 }
