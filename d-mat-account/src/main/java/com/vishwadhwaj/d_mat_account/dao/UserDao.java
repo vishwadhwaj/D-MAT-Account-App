@@ -2,35 +2,51 @@ package com.vishwadhwaj.d_mat_account.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import com.vishwadhwaj.d_mat_account.db.Db;
 import com.vishwadhwaj.d_mat_account.entities.Account;
+import com.vishwadhwaj.d_mat_account.exceptions.DuplicateEntryException;
 
 public class UserDao implements Dao<Account> {
 
 	private Db db;
+
 	public UserDao() {
-		db=Db.getInstance();
+		db = Db.getInstance();
 	}
+
 	@Override
 	public boolean create(Account account) {
-		Connection connection=db.createConnection();
-		String sql="insert into account (name,number,amount) values (?,?,?)";
+		Connection connection = db.createConnection();
 		int i=0;
 		try {
-			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			String sqlForDuplicate = "select * from account where name=?";
+			PreparedStatement preparedStatementForDuplicate = connection.prepareStatement(sqlForDuplicate);
+			preparedStatementForDuplicate.setString(1, account.getName());
+			ResultSet resultSet = preparedStatementForDuplicate.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				throw new DuplicateEntryException();
+			}
+			String sql = "insert into account (name,number,amount) values (?,?,?)";
+		
+
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, account.getName());
 			preparedStatement.setInt(2, account.getAccountNumber());
 			preparedStatement.setInt(3, account.getAmount());
-			i=preparedStatement.executeUpdate();
-			
+			i = preparedStatement.executeUpdate();
+
+		} catch (DuplicateEntryException e) {
+			System.out.println("Account number already exists");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return i>0?true:false;
+		return i > 0 ? true : false;
 	}
 
 	@Override

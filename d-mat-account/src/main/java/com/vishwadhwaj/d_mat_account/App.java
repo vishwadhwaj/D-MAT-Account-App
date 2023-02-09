@@ -1,18 +1,20 @@
 package com.vishwadhwaj.d_mat_account;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 import com.vishwadhwaj.d_mat_account.entities.Account;
+import com.vishwadhwaj.d_mat_account.exceptions.InvalidNameException;
 import com.vishwadhwaj.d_mat_account.service.AuthenticationService;
 
 public class App {
 
-	
 	Scanner scanner;
 	AuthenticationService authenticationService;
+
 	private App() {
 		scanner = new Scanner(System.in);
-		authenticationService=AuthenticationService.getInstance();
+		authenticationService = AuthenticationService.getInstance();
 	}
 
 	void MainMenu() {
@@ -26,16 +28,21 @@ public class App {
 			System.out.println("1.Create Account");
 			System.out.println("2.Login");
 			System.out.println("3.quit");
-
 			int choice = scanner.nextInt();
+			scanner.nextLine();
 			switch (choice) {
 			case 1:
-				register();
+				if (register() == true) {
+					System.out.println("register succeeded");
+				} else {
+					System.out.println("register failed");
+				}
 				break;
 			case 2:
-				login();
+//				login();
 				break;
 			case 3:
+				System.out.println("Thank you for using app");
 				flag = false;
 				break;
 			default:
@@ -46,26 +53,32 @@ public class App {
 	}
 
 	boolean register() {
-		Account account=new Account();
+		Account account = new Account();
+		boolean registrationStatus=false;
 		try {
 			System.out.println("Enter your name:");
 			String name = scanner.nextLine();
+			if (name.isEmpty() || Pattern.matches("[a-zA-Z\s]+", name) == false) {
+				throw new InvalidNameException();
+			}
 			System.out.println("Enter your account number:");
-			Integer accountNumber = scanner.nextInt();
+			Integer accountNUmber = scanner.nextInt();
 			System.out.println("Enter your amount:");
 			Integer amount = scanner.nextInt();
 			account.setName(name);
-			account.setAccountNumber(accountNumber);
+			account.setAccountNumber(accountNUmber);
 			account.setAmount(amount);
+			registrationStatus=authenticationService.registerUser(account);
 		} catch (Exception e) {
-			System.out.println("Bad Credentials");
+			System.out.println("Bad Input");
 		}
-		return authenticationService.registerUser(account);
+		scanner.nextLine();
+		return registrationStatus;
 	}
 
-	boolean login() {
-
-	}
+//	boolean login() {
+//
+//	}
 
 	public static void main(String[] args) {
 
