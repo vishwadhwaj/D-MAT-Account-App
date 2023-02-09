@@ -1,52 +1,73 @@
 package com.vishwadhwaj.d_mat_account;
+
 import java.util.*;
 
+import com.vishwadhwaj.d_mat_account.entities.Account;
 
 public class App {
+
 	
+	Scanner scanner;
+
 	private App() {
-		
+		scanner = new Scanner(System.in);
 	}
-	
-	public static void showMainMenu() {
+
+	void MainMenu() {
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println("Welcome to the D-Mat Account");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println();
 		System.out.println();
-		boolean flag=true;
-		while(flag) {
+		boolean flag = true;
+		while (flag) {
 			System.out.println("1.Create Account");
 			System.out.println("2.Login");
 			System.out.println("3.quit");
-			try (Scanner scanner = new Scanner(System.in)) {
-				int choice=scanner.nextInt();
-				switch(choice){
-					case 1:
-						showRegistrationForm();
-						break;
-					case 2:
-						showLoginForm();
-						break;
-					case 3:
-						flag=false;
-						break;
-					default:
-						System.out.println("Enter Valid Choice");
-				}
+
+			int choice = scanner.nextInt();
+			switch (choice) {
+			case 1:
+				register();
+				break;
+			case 2:
+				login();
+				break;
+			case 3:
+				flag = false;
+				break;
+			default:
+				System.out.println("Enter Valid Choice");
 			}
-			
 		}
-		
+
 	}
-	public static void showRegistrationForm() {
-		
+
+	boolean register() {
+		try {
+			Account account=new Account();
+			System.out.println("Enter your name:");
+			String name = scanner.nextLine();
+			System.out.println("Enter your account number:");
+			Integer accountNumber = scanner.nextInt();
+			System.out.println("Enter your amount:");
+			Integer amount = scanner.nextInt();
+			account.setName(name);
+			account.setAccountNumber(accountNumber);
+			account.setAmount(amount);
+		} catch (Exception e) {
+			System.out.println("Bad Credentials");
+		}
+		return authenticationService.registerUser(account);
 	}
-	public static void showLoginForm() {
-		
+
+	boolean login() {
+
 	}
+
 	public static void main(String[] args) {
-		
-		showMainMenu();
+
+		App app = new App();
+		app.MainMenu();
 	}
 }
