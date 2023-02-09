@@ -2,9 +2,9 @@ package com.vishwadhwaj.d_mat_account.entities;
 
 public class Account {
 
-	public String name;
-	public Integer accountNumber;
-	public Integer amount;
+	private String name;
+	private Integer accountNumber;
+	private Integer amount;
 	public String getName() {
 		return name;
 	}
@@ -32,6 +32,10 @@ public class Account {
 	@Override
 	public String toString() {
 		return "Account [name=" + name + ", accountNumber=" + accountNumber + ", amount=" + amount + "]";
+	}
+	public Account() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	
 }
