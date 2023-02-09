@@ -72,7 +72,7 @@ public class App {
 		} catch (InvalidNameException e) {
 			System.out.println("Invalid Name");
 		} catch (Exception e) {
-			System.out.println("Invalid Account number or amount");
+			System.out.println("Bad Input");
 			scanner.nextLine();
 		}
 		return registrationStatus;
