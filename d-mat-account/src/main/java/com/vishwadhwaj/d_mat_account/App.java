@@ -54,7 +54,7 @@ public class App {
 
 	boolean register() {
 		Account account = new Account();
-		boolean registrationStatus=false;
+		boolean registrationStatus = false;
 		try {
 			System.out.println("Enter your name:");
 			String name = scanner.nextLine();
@@ -68,11 +68,13 @@ public class App {
 			account.setName(name);
 			account.setAccountNumber(accountNUmber);
 			account.setAmount(amount);
-			registrationStatus=authenticationService.registerUser(account);
+			registrationStatus = authenticationService.registerUser(account);
+		} catch (InvalidNameException e) {
+			System.out.println("Invalid Name");
 		} catch (Exception e) {
-			System.out.println("Bad Input");
+			System.out.println("Invalid Account number or amount");
+			scanner.nextLine();
 		}
-		scanner.nextLine();
 		return registrationStatus;
 	}
 

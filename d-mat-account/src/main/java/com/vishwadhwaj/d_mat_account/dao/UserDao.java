@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import com.vishwadhwaj.d_mat_account.db.Db;
@@ -24,11 +23,11 @@ public class UserDao implements Dao<Account> {
 		Connection connection = db.createConnection();
 		int i=0;
 		try {
-			String sqlForDuplicate = "select * from account where name=?";
+			String sqlForDuplicate = "select * from account where number=?";
 			PreparedStatement preparedStatementForDuplicate = connection.prepareStatement(sqlForDuplicate);
-			preparedStatementForDuplicate.setString(1, account.getName());
+			preparedStatementForDuplicate.setInt(1, account.getAccountNumber());
 			ResultSet resultSet = preparedStatementForDuplicate.executeQuery();
-			if (!resultSet.isBeforeFirst()) {
+			if (resultSet.isBeforeFirst()) {
 				throw new DuplicateEntryException();
 			}
 			String sql = "insert into account (name,number,amount) values (?,?,?)";
