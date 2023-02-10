@@ -6,6 +6,34 @@ public class Account {
 	private String name;
 	private Integer accountNumber;
 	private Integer amount;
+	private Share share;
+	private Integer numberOfShare;
+
+	public Account(Integer id, String name, Integer accountNumber, Integer amount, Share share, Integer numberOfShare) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.accountNumber = accountNumber;
+		this.amount = amount;
+		this.share = share;
+		this.numberOfShare = numberOfShare;
+	}
+
+	public Share getShare() {
+		return share;
+	}
+
+	public void setShare(Share share) {
+		this.share = share;
+	}
+
+	public Integer getNumberOfShare() {
+		return numberOfShare;
+	}
+
+	public void setNumberOfShare(Integer numberOfShare) {
+		this.numberOfShare = numberOfShare;
+	}
 
 	public String getName() {
 		return name;
@@ -31,17 +59,12 @@ public class Account {
 		this.amount = amount;
 	}
 
-	public Account(String name, Integer accountNumber, Integer amount, Integer id) {
-		super();
-		this.name = name;
-		this.accountNumber = accountNumber;
-		this.amount = amount;
-		this.id = id;
-	}
+	
 
 	@Override
 	public String toString() {
-		return "Account [id=" + id + ", name=" + name + ", accountNumber=" + accountNumber + ", amount=" + amount + "]";
+		return "Account [id=" + id + ", name=" + name + ", accountNumber=" + accountNumber + ", amount=" + amount
+				+ ", share=" + share + ", numberOfShare=" + numberOfShare + "]";
 	}
 
 	public Account() {
