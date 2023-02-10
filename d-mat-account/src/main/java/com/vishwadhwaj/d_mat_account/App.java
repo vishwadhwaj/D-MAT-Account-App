@@ -33,13 +33,18 @@ public class App {
 			switch (choice) {
 			case 1:
 				if (register() == true) {
-					System.out.println("register succeeded");
+					showUserMenu();
 				} else {
 					System.out.println("register failed");
 				}
 				break;
 			case 2:
-//				login();
+				if(login()==true) {
+					System.out.println("login succeeded");
+				}
+				else {
+					System.out.println("login failed");
+				}
 				break;
 			case 3:
 				System.out.println("Thank you for using app");
@@ -70,7 +75,7 @@ public class App {
 			account.setAmount(amount);
 			registrationStatus = authenticationService.registerUser(account);
 		} catch (InvalidNameException e) {
-			System.out.println("Invalid Name");
+			System.out.println("Bad Input");
 		} catch (Exception e) {
 			System.out.println("Bad Input");
 			scanner.nextLine();
@@ -78,9 +83,17 @@ public class App {
 		return registrationStatus;
 	}
 
-//	boolean login() {
-//
-//	}
+	boolean login() {
+		System.out.println("Enter your account number");
+		Integer accountNumber=scanner.nextInt();
+		boolean loginStatus=false;
+		loginStatus=authenticationService.loginUser(accountNumber);
+		return loginStatus;
+	}
+	
+	void showUserMenu() {
+		
+	}
 
 	public static void main(String[] args) {
 

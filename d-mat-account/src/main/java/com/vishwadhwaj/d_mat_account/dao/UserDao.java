@@ -45,23 +45,41 @@ public class UserDao implements Dao<Account> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return i > 0 ? true : false;
 	}
 
 	@Override
-	public boolean update(Account account) {
-		return true;
+	public boolean search(Integer accountNumber) {
+		Connection connection=db.createConnection();
+		String sql="select * from account where number=?";
+		boolean isFound=false;
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1, accountNumber);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			if(resultSet.isBeforeFirst()) {
+				isFound=true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return isFound;
 	}
 
-	@Override
-	public boolean delete(Account object) {
-		return true;
-	}
-
-	@Override
-	public List<Account> read() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	
 
 }
