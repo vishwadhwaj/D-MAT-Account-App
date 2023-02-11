@@ -37,17 +37,22 @@ public class ShareDao implements Dao<Share> {
 		}
 		return shares;
 	}
-
 	@Override
-	public boolean save(Share object) {
+	public Integer save(Share object) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
-
 	@Override
-	public boolean findById(Integer id) {
+	public Integer findById(Integer id) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
+	@Override
+	public int update(Share object) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 
+	
 }

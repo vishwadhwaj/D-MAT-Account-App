@@ -4,13 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.vishwadhwaj.d_mat_account.db.Db;
 import com.vishwadhwaj.d_mat_account.entities.Account;
 import com.vishwadhwaj.d_mat_account.entities.Share;
 import com.vishwadhwaj.d_mat_account.entities.UserShare;
 
-public class UserShareDao {
+public class UserShareDao implements Dao<UserShare> {
 
 	Db db;
 
@@ -62,4 +63,30 @@ public class UserShareDao {
 		}
 		return userShareFromDb;
 	}
+
+	@Override
+	public Integer save(UserShare object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer findById(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UserShare> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int update(UserShare object) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	
 }

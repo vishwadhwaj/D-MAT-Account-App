@@ -22,9 +22,9 @@ public class UserDao implements Dao<Account> {
 	}
 
 	@Override
-	public boolean save(Account account) {
+	public Integer save(Account account) {
 		Connection connection = db.createConnection();
-		int i=0;
+		int id=0;
 		try {
 			String sqlForDuplicate = "select * from account where number=?";
 			PreparedStatement preparedStatementForDuplicate = connection.prepareStatement(sqlForDuplicate);
@@ -34,11 +34,15 @@ public class UserDao implements Dao<Account> {
 				throw new DuplicateEntryException();
 			}
 			String sql = "insert into account (name,number,amount) values (?,?,?)";
-			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			PreparedStatement preparedStatement=connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, account.getName());
 			preparedStatement.setInt(2, account.getAccountNumber());
 			preparedStatement.setInt(3, account.getAmount());
-			i=preparedStatement.executeUpdate();
+			preparedStatement.executeUpdate();
+			ResultSet generatedKeys=preparedStatement.getGeneratedKeys();
+			if(generatedKeys.next()) {
+				id=generatedKeys.getInt(1);
+			}
 			
 			
 		} catch (DuplicateEntryException e) {
@@ -53,21 +57,19 @@ public class UserDao implements Dao<Account> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return i>0?true:false;
+		return id;
 	}
 
 	@Override
-	public boolean findById(Integer accountNumber) {
+	public Integer findById(Integer accountNumber) {
 		Connection connection = db.createConnection();
-		boolean loginStatus=false;
+		int id=0;
 		String sql = "select * from account where number=?";
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, accountNumber);
 			ResultSet resultSet = preparedStatement.executeQuery();
-			if(resultSet.isBeforeFirst()) {
-				loginStatus=true;
-			}
+			id=resultSet.getInt("id");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -79,7 +81,7 @@ public class UserDao implements Dao<Account> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return loginStatus;
+		return id;
 	}
 
 	
@@ -90,5 +92,13 @@ public class UserDao implements Dao<Account> {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public int update(Account object) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	
 
 }

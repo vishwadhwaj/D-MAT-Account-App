@@ -8,26 +8,38 @@ public class Transaction {
 	private String timeOfTransaction;
 	private Integer numberOfShare;
 	private Integer price;
-	private Type type;
-	@Override
-	public String toString() {
-		return "Transaction [id=" + id + ", dateOfTransaction=" + dateOfTransaction + ", timeOfTransaction="
-				+ timeOfTransaction + ", numberOfShare=" + numberOfShare + ", price=" + price + "]";
-	}
+	private Integer type;
+	private Share share;
+	private Account account;
+	
 	public Transaction() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Transaction(Integer id, Date dateOfTransaction, String timeOfTransaction, Integer numberOfShare,
-			Integer price, Type type) {
-		super();
-		this.id = id;
-		this.dateOfTransaction = dateOfTransaction;
-		this.timeOfTransaction = timeOfTransaction;
-		this.numberOfShare = numberOfShare;
-		this.price = price;
-		this.type = type;
+	
+	@Override
+	public String toString() {
+		return "Transaction [id=" + id + ", dateOfTransaction=" + dateOfTransaction + ", timeOfTransaction="
+				+ timeOfTransaction + ", numberOfShare=" + numberOfShare + ", price=" + price + ", type=" + type
+				+ ", share=" + share + ", account=" + account + "]";
 	}
+
+	public Share getShare() {
+		return share;
+	}
+
+	public void setShare(Share share) {
+		this.share = share;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -58,10 +70,10 @@ public class Transaction {
 	public void setPrice(Integer price) {
 		this.price = price;
 	}
-	public Type getType() {
+	public Integer getType() {
 		return type;
 	}
-	public void setType(Type type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 }

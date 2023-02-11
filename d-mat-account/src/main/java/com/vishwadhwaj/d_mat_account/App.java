@@ -3,8 +3,11 @@ package com.vishwadhwaj.d_mat_account;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import com.vishwadhwaj.d_mat_account.dao.UserShareDao;
 import com.vishwadhwaj.d_mat_account.entities.Account;
 import com.vishwadhwaj.d_mat_account.entities.Share;
+import com.vishwadhwaj.d_mat_account.entities.Transaction;
+
 import com.vishwadhwaj.d_mat_account.entities.UserShare;
 import com.vishwadhwaj.d_mat_account.exceptions.InvalidNameException;
 import com.vishwadhwaj.d_mat_account.service.AccountService;
@@ -24,7 +27,7 @@ public class App {
 		authenticationService = AuthenticationService.getInstance();
 		accountService = AccountService.getInstance();
 		transactionService = TransactionService.getInstance();
-		userShare=null;
+		userShare = null;
 	}
 
 	void MainMenu() {
@@ -67,8 +70,8 @@ public class App {
 	}
 
 	boolean register() {
-		boolean registrationStatus=false;
-		Account account=new Account();
+		int id = 0;
+		Account account = new Account();
 		try {
 			System.out.println("Enter your name:");
 			String name = scanner.nextLine();
@@ -82,21 +85,25 @@ public class App {
 			account.setName(name);
 			account.setAccountNumber(accountNUmber);
 			account.setAmount(amount);
-			registrationStatus = authenticationService.registerUser(account);
+			id = authenticationService.registerUser(account);
+			UserShareDao userShareDao = new UserShareDao();
+			userShare = userShareDao.getUserShare(id);
 		} catch (InvalidNameException e) {
 			System.out.println("Bad Input");
 		} catch (Exception e) {
 			System.out.println("Bad Input");
 			scanner.nextLine();
 		}
-		return registrationStatus;
+		return id > 0 ? true : false;
 	}
 
 	boolean login() {
 		System.out.println("Enter your account number");
 		Integer accountNumber = scanner.nextInt();
-		boolean loginStatus=authenticationService.loginUser(accountNumber);
-		return loginStatus;
+		int id = authenticationService.loginUser(accountNumber);
+		UserShareDao userShareDao = new UserShareDao();
+		userShare = userShareDao.getUserShare(id);
+		return id > 0 ? true : false;
 	}
 
 	void showUserMenu() {
@@ -150,29 +157,37 @@ public class App {
 	}
 
 	boolean buyTransaction() {
-		List<Share> shares=transactionService.findShares();
-		for(int i=0;i<shares.size();i++) {
-			System.out.println(i+1+". "+shares.get(i).getName()+" "+shares.get(i).getValue());
+		List<Share> shares = transactionService.findShares();
+		boolean transactionStatus = false;
+		for (int i = 0; i < shares.size(); i++) {
+			System.out.println(i + 1 + ". " + shares.get(i).getName() + " " + shares.get(i).getValue());
 		}
 		try {
 			System.out.println("Select the share you want to buy:");
 			int choice = scanner.nextInt();
-			if(choice>shares.size() || choice<1) {
+			if (choice > shares.size() || choice < 1) {
 				throw new Exception();
 			}
 			System.out.println("Enter the number of shares you want to buy:");
-			int number = scanner.nextInt();
-			int valueOfShare=shares.get(choice-1).getValue();
-			int transactionAmount=transactionService.totalTransaction(valueOfShare,number,account.getAmount());
-			if(transactionAmount<0) {
+			int numberOfShare = scanner.nextInt();
+			int valueOfShare = shares.get(choice - 1).getValue();
+			Transaction transaction = new Transaction();
+			transaction.setNumberOfShare(numberOfShare);
+			transaction.setPrice(valueOfShare);
+			transaction.setType(1);
+			transaction.setShare(shares.get(choice - 1));
+			transaction.setAccount(userShare.getAccount());
+			int transactionAmount = transactionService.totalTransaction(valueOfShare, numberOfShare,
+					userShare.getAccount().getAmount());
+			if (transactionAmount < 0) {
 				return false;
-			}
-			else {
-				transactionService.buyTransaction(transactionAmount,account,valueOfShare,number);
+			} else {
+				transactionStatus = transactionService.buyTransaction(transactionAmount, userShare, transaction);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return transactionStatus;
 	}
 
 	public static void main(String[] args) {
