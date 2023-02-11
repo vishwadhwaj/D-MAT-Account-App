@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import com.vishwadhwaj.d_mat_account.entities.Account;
 import com.vishwadhwaj.d_mat_account.entities.Share;
+import com.vishwadhwaj.d_mat_account.entities.UserShare;
 import com.vishwadhwaj.d_mat_account.exceptions.InvalidNameException;
 import com.vishwadhwaj.d_mat_account.service.AccountService;
 import com.vishwadhwaj.d_mat_account.service.AuthenticationService;
@@ -16,14 +17,14 @@ public class App {
 	AuthenticationService authenticationService;
 	AccountService accountService;
 	TransactionService transactionService;
-	Account account;
+	UserShare userShare;
 
 	private App() {
 		scanner = new Scanner(System.in);
 		authenticationService = AuthenticationService.getInstance();
 		accountService = AccountService.getInstance();
 		transactionService = TransactionService.getInstance();
-		account=null;
+		userShare=null;
 	}
 
 	void MainMenu() {
@@ -41,14 +42,14 @@ public class App {
 			scanner.nextLine();
 			switch (choice) {
 			case 1:
-				if (register() != null) {
+				if (register() == true) {
 					showUserMenu();
 				} else {
 					System.out.println("register failed");
 				}
 				break;
 			case 2:
-				if (login() != null) {
+				if (login() == true) {
 					showUserMenu();
 				} else {
 					System.out.println("login failed");
@@ -65,7 +66,9 @@ public class App {
 
 	}
 
-	Account register() {
+	boolean register() {
+		boolean registrationStatus=false;
+		Account account=new Account();
 		try {
 			System.out.println("Enter your name:");
 			String name = scanner.nextLine();
@@ -79,21 +82,21 @@ public class App {
 			account.setName(name);
 			account.setAccountNumber(accountNUmber);
 			account.setAmount(amount);
-			account = authenticationService.registerUser(account);
+			registrationStatus = authenticationService.registerUser(account);
 		} catch (InvalidNameException e) {
 			System.out.println("Bad Input");
 		} catch (Exception e) {
 			System.out.println("Bad Input");
 			scanner.nextLine();
 		}
-		return account;
+		return registrationStatus;
 	}
 
-	Account login() {
+	boolean login() {
 		System.out.println("Enter your account number");
 		Integer accountNumber = scanner.nextInt();
-		account = authenticationService.loginUser(accountNumber);
-		return account;
+		boolean loginStatus=authenticationService.loginUser(accountNumber);
+		return loginStatus;
 	}
 
 	void showUserMenu() {

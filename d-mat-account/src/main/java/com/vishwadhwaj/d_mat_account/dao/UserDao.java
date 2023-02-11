@@ -22,9 +22,9 @@ public class UserDao implements Dao<Account> {
 	}
 
 	@Override
-	public Account save(Account account) {
+	public boolean save(Account account) {
 		Connection connection = db.createConnection();
-		boolean registrationStatus=false;
+		int i=0;
 		try {
 			String sqlForDuplicate = "select * from account where number=?";
 			PreparedStatement preparedStatementForDuplicate = connection.prepareStatement(sqlForDuplicate);
@@ -34,7 +34,11 @@ public class UserDao implements Dao<Account> {
 				throw new DuplicateEntryException();
 			}
 			String sql = "insert into account (name,number,amount) values (?,?,?)";
-
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setString(1, account.getName());
+			preparedStatement.setInt(2, account.getAccountNumber());
+			preparedStatement.setInt(3, account.getAmount());
+			i=preparedStatement.executeUpdate();
 			
 			
 		} catch (DuplicateEntryException e) {
@@ -49,7 +53,7 @@ public class UserDao implements Dao<Account> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return accountFromDb;
+		return i>0?true:false;
 	}
 
 	@Override
@@ -57,12 +61,13 @@ public class UserDao implements Dao<Account> {
 		Connection connection = db.createConnection();
 		boolean loginStatus=false;
 		String sql = "select * from account where number=?";
-		Account accountFromDb=null;
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, accountNumber);
 			ResultSet resultSet = preparedStatement.executeQuery();
-			
+			if(resultSet.isBeforeFirst()) {
+				loginStatus=true;
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -74,7 +79,7 @@ public class UserDao implements Dao<Account> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return accountFromDb;
+		return loginStatus;
 	}
 
 	
