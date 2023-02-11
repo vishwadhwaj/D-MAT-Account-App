@@ -13,10 +13,10 @@ public class AuthenticationService {
 	public static AuthenticationService getInstance() {
 		return authenticationService;
 	}
-	public boolean registerUser(Account account) {
-		return userDao.create(account);
+	public Account registerUser(Account account) {
+		return userDao.save(account);
 	}
-	public boolean loginUser(Integer accountNumber) {
-		return userDao.search(accountNumber);
+	public Account loginUser(Integer accountNumber) {
+		return userDao.findById(accountNumber);
 	}
 }
