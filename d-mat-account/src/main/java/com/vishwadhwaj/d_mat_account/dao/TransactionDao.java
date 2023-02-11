@@ -13,14 +13,14 @@ public class TransactionDao implements Dao<Transaction>{
 		db=Db.getInstance();
 	}
 	@Override
-	public Transaction save(Transaction object) {
+	public boolean save(Transaction object) {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 	@Override
-	public Transaction findById(Integer id) {
+	public boolean findById(Integer id) {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 	@Override
 	public List<Transaction> findAll() {

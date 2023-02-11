@@ -51,14 +51,15 @@ public class UserShareDao {
 			share.setName(resultSetForShares.getString("name"));
 			share.setValue(resultSetForShares.getInt("value"));
 			userShareFromDb.setShare(share);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return userShareFromDb;
 	}
 }
