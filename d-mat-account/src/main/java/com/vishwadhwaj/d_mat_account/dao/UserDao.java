@@ -24,7 +24,7 @@ public class UserDao implements Dao<Account> {
 	@Override
 	public Integer save(Account account) {
 		Connection connection = db.createConnection();
-		int id=0;
+		int id = 0;
 		try {
 			String sqlForDuplicate = "select * from account where number=?";
 			PreparedStatement preparedStatementForDuplicate = connection.prepareStatement(sqlForDuplicate);
@@ -34,17 +34,16 @@ public class UserDao implements Dao<Account> {
 				throw new DuplicateEntryException();
 			}
 			String sql = "insert into account (name,number,amount) values (?,?,?)";
-			PreparedStatement preparedStatement=connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, account.getName());
 			preparedStatement.setInt(2, account.getAccountNumber());
 			preparedStatement.setInt(3, account.getAmount());
 			preparedStatement.executeUpdate();
-			ResultSet generatedKeys=preparedStatement.getGeneratedKeys();
-			if(generatedKeys.next()) {
-				id=generatedKeys.getInt(1);
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				id = generatedKeys.getInt(1);
 			}
-			
-			
+
 		} catch (DuplicateEntryException e) {
 			System.out.println("Account number already exists");
 		} catch (Exception e) {
@@ -63,14 +62,16 @@ public class UserDao implements Dao<Account> {
 	@Override
 	public Integer findById(Integer accountNumber) {
 		Connection connection = db.createConnection();
-		int id=0;
+		int id = 0;
 		String sql = "select * from account where number=?";
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, accountNumber);
 			ResultSet resultSet = preparedStatement.executeQuery();
-			id=resultSet.getInt("id");
-			
+			if (resultSet.next()) {
+				id = resultSet.getInt("id");
+			}
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,8 +85,6 @@ public class UserDao implements Dao<Account> {
 		return id;
 	}
 
-	
-
 	@Override
 	public List<Account> findAll() {
 		return null;
@@ -95,14 +94,14 @@ public class UserDao implements Dao<Account> {
 
 	@Override
 	public int update(Account account) {
-		Connection connection=db.createConnection();
-		String sql="update account set amount=? where id=?";
-		int i=0;
+		Connection connection = db.createConnection();
+		String sql = "update account set amount=? where id=?";
+		int i = 0;
 		try {
-			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, account.getAmount());
 			preparedStatement.setInt(2, account.getId());
-			i=preparedStatement.executeUpdate();
+			i = preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -115,7 +114,5 @@ public class UserDao implements Dao<Account> {
 		}
 		return i;
 	}
-
-	
 
 }
