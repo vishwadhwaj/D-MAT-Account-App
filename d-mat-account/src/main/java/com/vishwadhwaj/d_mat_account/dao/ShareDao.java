@@ -31,6 +31,12 @@ public class ShareDao implements Dao<Share> {
 				share.setValue(resultSet.getInt("Value"));
 				shares.add(share);
 			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

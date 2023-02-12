@@ -30,6 +30,8 @@ public class TransactionService {
 	public boolean buyTransaction(int transactionAmount,UserShare userShare,Transaction transaction) {
 		int transactionId=transactionDao.save(transaction);
 		int userShareId=userShareDao.save(userShare);
+		int remainingBalance=userShare.getAccount().getAmount()-transactionAmount;
+		userShare.getAccount().setAmount(remainingBalance);
 		int updatedRecord=userDao.update(userShare.getAccount());
 		if(transactionId>0 && userShareId>0 && updatedRecord>0) {
 			return true;

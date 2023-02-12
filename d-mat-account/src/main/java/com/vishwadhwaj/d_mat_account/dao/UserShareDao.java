@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import com.vishwadhwaj.d_mat_account.db.Db;
@@ -65,9 +66,32 @@ public class UserShareDao implements Dao<UserShare> {
 	}
 
 	@Override
-	public Integer save(UserShare object) {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer save(UserShare userShare) {
+		Connection connection=db.createConnection();
+		String sql="insert into user_share (share_id,number_of_shares,user_id) values (?,?,?)";
+		int id=0;
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setInt(1, userShare.getShare().getId());
+			preparedStatement.setInt(2, userShare.getNumberOfShare());
+			preparedStatement.setInt(3, userShare.getAccount().getId());
+			preparedStatement.executeUpdate();
+			ResultSet generatedKeys=preparedStatement.getGeneratedKeys();
+			
+			if(generatedKeys.next()) {
+				id=generatedKeys.getInt(1);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return id;
 	}
 
 	@Override

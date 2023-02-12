@@ -47,7 +47,7 @@ public class UserDao implements Dao<Account> {
 			
 		} catch (DuplicateEntryException e) {
 			System.out.println("Account number already exists");
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -71,7 +71,7 @@ public class UserDao implements Dao<Account> {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			id=resultSet.getInt("id");
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -94,9 +94,26 @@ public class UserDao implements Dao<Account> {
 	}
 
 	@Override
-	public int update(Account object) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(Account account) {
+		Connection connection=db.createConnection();
+		String sql="update account set amount=? where id=?";
+		int i=0;
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1, account.getAmount());
+			preparedStatement.setInt(2, account.getId());
+			i=preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return i;
 	}
 
 	

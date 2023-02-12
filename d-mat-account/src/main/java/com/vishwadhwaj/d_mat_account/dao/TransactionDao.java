@@ -34,11 +34,18 @@ public class TransactionDao implements Dao<Transaction>{
 			if(generatedKeys.next()) {
 				id=generatedKeys.getInt(1);
 			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return id;
+		
 	}
 	@Override
 	public Integer findById(Integer id) {
