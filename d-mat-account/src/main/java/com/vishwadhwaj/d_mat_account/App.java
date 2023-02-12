@@ -176,6 +176,8 @@ public class App {
 			transaction.setPrice(valueOfShare);
 			transaction.setType(1);
 			transaction.setShare(shares.get(choice - 1));
+			userShare.setShare(shares.get(choice-1));
+			userShare.setNumberOfShare(numberOfShare);
 			transaction.setAccount(userShare.getAccount());
 			int transactionAmount = transactionService.totalTransaction(valueOfShare, numberOfShare,
 					userShare.getAccount().getAmount());

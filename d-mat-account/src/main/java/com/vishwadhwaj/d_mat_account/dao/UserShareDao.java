@@ -29,30 +29,32 @@ public class UserShareDao implements Dao<UserShare> {
 			PreparedStatement preparedStatementForInsertedRecord = connection.prepareStatement(sqlForInsertedRecord);
 			preparedStatementForInsertedRecord.setInt(1, id);
 			ResultSet resultSetForInsertedRecord = preparedStatementForInsertedRecord.executeQuery();
-			resultSetForInsertedRecord.next();
-			accountFromDb.setId(resultSetForInsertedRecord.getInt("id"));
-			accountFromDb.setName(resultSetForInsertedRecord.getString("name"));
-			accountFromDb.setAmount(resultSetForInsertedRecord.getInt("amount"));
-			accountFromDb.setAccountNumber(resultSetForInsertedRecord.getInt("number"));
+			if (resultSetForInsertedRecord.next()) {
+				accountFromDb.setId(resultSetForInsertedRecord.getInt("id"));
+				accountFromDb.setName(resultSetForInsertedRecord.getString("name"));
+				accountFromDb.setAmount(resultSetForInsertedRecord.getInt("amount"));
+				accountFromDb.setAccountNumber(resultSetForInsertedRecord.getInt("number"));
+			}
+			userShareFromDb.setAccount(accountFromDb);
 			String sqlForNumberOfShares = "select * from user_share where user_id=?";
 			PreparedStatement preparedStatementForNumberOfShares = connection.prepareStatement(sqlForNumberOfShares);
 			preparedStatementForNumberOfShares.setInt(1, id);
 			ResultSet resultSetForNumberOfShares = preparedStatementForNumberOfShares.executeQuery();
-			resultSetForNumberOfShares.next();
-			userShareFromDb.setNumberOfShare(resultSetForNumberOfShares.getInt("number_of_shares"));
-			userShareFromDb.setAccount(accountFromDb);
-			userShareFromDb.setId(resultSetForNumberOfShares.getInt("id"));
-			int shareId = resultSetForNumberOfShares.getInt("share_id");
-			String sqlForShares = "select * from share where id=?";
-			PreparedStatement preparedStatementForShares = connection.prepareStatement(sqlForShares);
-			preparedStatementForShares.setInt(1, shareId);
-			ResultSet resultSetForShares = preparedStatementForShares.executeQuery();
-			resultSetForShares.next();
-			Share share = new Share();
-			share.setId(resultSetForShares.getInt("id"));
-			share.setName(resultSetForShares.getString("name"));
-			share.setValue(resultSetForShares.getInt("value"));
-			userShareFromDb.setShare(share);
+			if (resultSetForNumberOfShares.next()) {
+				userShareFromDb.setNumberOfShare(resultSetForNumberOfShares.getInt("number_of_shares"));
+				userShareFromDb.setId(resultSetForNumberOfShares.getInt("id"));
+				int shareId = resultSetForNumberOfShares.getInt("share_id");
+				String sqlForShares = "select * from share where id=?";
+				PreparedStatement preparedStatementForShares = connection.prepareStatement(sqlForShares);
+				preparedStatementForShares.setInt(1, shareId);
+				ResultSet resultSetForShares = preparedStatementForShares.executeQuery();
+				resultSetForShares.next();
+				Share share = new Share();
+				share.setId(resultSetForShares.getInt("id"));
+				share.setName(resultSetForShares.getString("name"));
+				share.setValue(resultSetForShares.getInt("value"));
+				userShareFromDb.setShare(share);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,19 +69,19 @@ public class UserShareDao implements Dao<UserShare> {
 
 	@Override
 	public Integer save(UserShare userShare) {
-		Connection connection=db.createConnection();
-		String sql="insert into user_share (share_id,number_of_shares,user_id) values (?,?,?)";
-		int id=0;
+		Connection connection = db.createConnection();
+		String sql = "insert into user_share (share_id,number_of_shares,user_id) values (?,?,?)";
+		int id = 0;
 		try {
-			PreparedStatement preparedStatement=connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, userShare.getShare().getId());
 			preparedStatement.setInt(2, userShare.getNumberOfShare());
 			preparedStatement.setInt(3, userShare.getAccount().getId());
 			preparedStatement.executeUpdate();
-			ResultSet generatedKeys=preparedStatement.getGeneratedKeys();
-			
-			if(generatedKeys.next()) {
-				id=generatedKeys.getInt(1);
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+
+			if (generatedKeys.next()) {
+				id = generatedKeys.getInt(1);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -112,5 +114,4 @@ public class UserShareDao implements Dao<UserShare> {
 		return 0;
 	}
 
-	
 }

@@ -30,8 +30,7 @@ public class TransactionService {
 	public boolean buyTransaction(int transactionAmount,UserShare userShare,Transaction transaction) {
 		int transactionId=transactionDao.save(transaction);
 		int userShareId=userShareDao.save(userShare);
-		int remainingBalance=userShare.getAccount().getAmount()-transactionAmount;
-		userShare.getAccount().setAmount(remainingBalance);
+		userShare.getAccount().setAmount(transactionAmount);
 		int updatedRecord=userDao.update(userShare.getAccount());
 		if(transactionId>0 && userShareId>0 && updatedRecord>0) {
 			return true;
@@ -56,9 +55,10 @@ public class TransactionService {
 	}
 	
 	public int totalTransaction(int valueOfShare,int number,int amount) {
-		int transactionCharges=(int)(((amount*0.5)/100)>100?((amount*0.5)/100):100);
-		int securityTransferTax=(int)((amount*0.1)/100);
-		amount-=(valueOfShare*number)+transactionCharges+securityTransferTax;
+		int transactionAmount=valueOfShare*number;
+		int transactionCharges=(int)(((transactionAmount*0.5)/100)>100?((transactionAmount*0.5)/100):100);
+		int securityTransferTax=(int)((transactionAmount*0.1)/100);
+		amount-=transactionAmount+transactionCharges+securityTransferTax;
 		return amount;
 	}
 }

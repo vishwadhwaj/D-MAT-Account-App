@@ -27,6 +27,7 @@ public class ShareDao implements Dao<Share> {
 			ResultSet resultSet=preparedStatement.executeQuery();
 			while(resultSet.next()) {
 				Share share=new Share();
+				share.setId(resultSet.getInt("id"));
 				share.setName(resultSet.getString("name"));
 				share.setValue(resultSet.getInt("Value"));
 				shares.add(share);
