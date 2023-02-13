@@ -20,14 +20,14 @@ public class App {
 	AuthenticationService authenticationService;
 	AccountService accountService;
 	TransactionService transactionService;
-	UserShare userShare;
+	List<UserShare> userShareFromDb;
 
 	private App() {
 		scanner = new Scanner(System.in);
 		authenticationService = AuthenticationService.getInstance();
 		accountService = AccountService.getInstance();
 		transactionService = TransactionService.getInstance();
-		userShare = null;
+		userShareFromDb = null;
 	}
 
 	void MainMenu() {
@@ -87,7 +87,7 @@ public class App {
 			account.setAmount(amount);
 			id = authenticationService.registerUser(account);
 			UserShareDao userShareDao = new UserShareDao();
-			userShare = userShareDao.getUserShare(id);
+			userShareFromDb = userShareDao.getUserShare(id);
 		} catch (InvalidNameException e) {
 			System.out.println("Bad Input");
 		} catch (Exception e) {
@@ -102,7 +102,7 @@ public class App {
 		Integer accountNumber = scanner.nextInt();
 		int id = authenticationService.loginUser(accountNumber);
 		UserShareDao userShareDao = new UserShareDao();
-		userShare = userShareDao.getUserShare(id);
+		userShareFromDb = userShareDao.getUserShare(id);
 		return id > 0 ? true : false;
 	}
 
@@ -159,6 +159,7 @@ public class App {
 	boolean buyTransaction() {
 		List<Share> shares = transactionService.findShares();
 		boolean transactionStatus = false;
+		UserShare userShare=new UserShare();
 		for (int i = 0; i < shares.size(); i++) {
 			System.out.println(i + 1 + ". " + shares.get(i).getName() + " " + shares.get(i).getValue());
 		}
@@ -178,7 +179,8 @@ public class App {
 			transaction.setShare(shares.get(choice - 1));
 			userShare.setShare(shares.get(choice-1));
 			userShare.setNumberOfShare(numberOfShare);
-			transaction.setAccount(userShare.getAccount());
+			transaction.setAccount(userShareFromDb.get(0).getAccount());
+			userShare.setAccount(userShareFromDb.get(0).getAccount());
 			int transactionAmount = transactionService.totalTransaction(valueOfShare, numberOfShare,
 					userShare.getAccount().getAmount());
 			if (transactionAmount < 0) {
