@@ -39,7 +39,8 @@ public class UserShareDao implements Dao<UserShare> {
 			}
 			userShareForNew.setAccount(accountFromDb);
 			String sqlForNumberOfShares = "select * from user_share where user_id=?";
-			PreparedStatement preparedStatementForNumberOfShares = connection.prepareStatement(sqlForNumberOfShares);
+			PreparedStatement preparedStatementForNumberOfShares = connection
+					.prepareStatement(sqlForNumberOfShares,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 			preparedStatementForNumberOfShares.setInt(1, id);
 			ResultSet resultSetForNumberOfShares = preparedStatementForNumberOfShares.executeQuery();
 			if (resultSetForNumberOfShares.next() == false) {

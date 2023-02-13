@@ -144,7 +144,12 @@ public class App {
 				}
 				break;
 			case 5:
-				transactionService.sellTransaction();
+//				if(sellTransaction()==true) {
+//					System.out.println("Transaction Succeded");
+//				}
+//				else {
+//					System.out.println("Transaction failed");
+//				}
 				break;
 			case 6:
 				transactionService.viewTransactionReport();
@@ -194,7 +199,10 @@ public class App {
 		}
 		return transactionStatus;
 	}
-
+	
+//	boolean sellTransaction() {
+//		
+//	}
 	public static void main(String[] args) {
 
 		App app = new App();
