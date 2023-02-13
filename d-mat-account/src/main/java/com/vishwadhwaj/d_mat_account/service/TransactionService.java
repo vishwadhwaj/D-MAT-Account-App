@@ -31,8 +31,8 @@ public class TransactionService {
 		int transactionId=transactionDao.save(transaction);
 		int userShareId=0;
 		int i=0;
-		if(userShareDao.findByObject(userShare)<0)
-		userShareId=userShareDao.save(userShare);
+		if(userShareDao.findByObject(userShare)==0)
+			userShareId=userShareDao.save(userShare);
 		else {
 			int Id=userShareDao.findByObject(userShare);
 			userShare.setId(Id);

@@ -21,6 +21,7 @@ public class App {
 	AccountService accountService;
 	TransactionService transactionService;
 	List<UserShare> userShareFromDb;
+	int userId;
 
 	private App() {
 		scanner = new Scanner(System.in);
@@ -86,8 +87,7 @@ public class App {
 			account.setAccountNumber(accountNUmber);
 			account.setAmount(amount);
 			id = authenticationService.registerUser(account);
-			UserShareDao userShareDao = new UserShareDao();
-			userShareFromDb = userShareDao.getUserShare(id);
+			userId=id;
 		} catch (InvalidNameException e) {
 			System.out.println("Bad Input");
 		} catch (Exception e) {
@@ -101,8 +101,7 @@ public class App {
 		System.out.println("Enter your account number");
 		Integer accountNumber = scanner.nextInt();
 		int id = authenticationService.loginUser(accountNumber);
-		UserShareDao userShareDao = new UserShareDao();
-		userShareFromDb = userShareDao.getUserShare(id);
+		userId=id;
 		return id > 0 ? true : false;
 	}
 
@@ -158,6 +157,8 @@ public class App {
 
 	boolean buyTransaction() {
 		List<Share> shares = transactionService.findShares();
+		UserShareDao userShareDao = new UserShareDao();
+		userShareFromDb = userShareDao.getUserShare(userId);
 		boolean transactionStatus = false;
 		UserShare userShare=new UserShare();
 		for (int i = 0; i < shares.size(); i++) {
