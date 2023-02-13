@@ -217,6 +217,7 @@ public class UserShareDao implements Dao<UserShare> {
 		String sql="delete from user_share where id=?";
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
 			i=preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
