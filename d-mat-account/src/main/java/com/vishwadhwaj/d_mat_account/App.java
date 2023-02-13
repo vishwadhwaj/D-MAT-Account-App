@@ -220,7 +220,7 @@ public class App {
 				scanner.nextLine();
 				System.out.println("Select the share you want to sell:");
 				int choice=scanner.nextInt();
-				if(choice>=userShareFromDb.size() || choice<1) {
+				if(choice>userShareFromDb.size() || choice<1) {
 					throw new Exception();
 				}
 				System.out.println("Enter the number of share you want to sell");
