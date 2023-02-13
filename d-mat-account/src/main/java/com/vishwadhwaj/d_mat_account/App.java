@@ -144,12 +144,12 @@ public class App {
 				}
 				break;
 			case 5:
-//				if(sellTransaction()==true) {
-//					System.out.println("Transaction Succeded");
-//				}
-//				else {
-//					System.out.println("Transaction failed");
-//				}
+				if(sellTransaction()==true) {
+					System.out.println("Transaction Succeded");
+				}
+				else {
+					System.out.println("Transaction failed");
+				}
 				break;
 			case 6:
 				transactionService.viewTransactionReport();
@@ -200,9 +200,43 @@ public class App {
 		return transactionStatus;
 	}
 	
-//	boolean sellTransaction() {
-//		
-//	}
+	boolean sellTransaction() {
+		UserShareDao userShareDao=new UserShareDao();
+		boolean transactionStatus=false;
+		userShareFromDb=userShareDao.getUserShare(userId);
+		UserShare userShare=new UserShare();
+		if(userShareFromDb.get(0).getId()<=0) {
+			System.out.println("You have no share to sell");
+		}
+		else {
+			try {
+				for(int i=0;i<userShareFromDb.size();i++) {
+					System.out.println(i+1+" "
+							+userShareFromDb.get(i).getShare().getName()+" "+
+							userShareFromDb.get(i).getNumberOfShare()+" "+
+							userShareFromDb.get(i).getShare().getValue()
+							);
+				}
+				scanner.nextLine();
+				System.out.println("Select the share you want to sell:");
+				int choice=scanner.nextInt();
+				if(choice>=userShareFromDb.size() || choice<1) {
+					throw new Exception();
+				}
+				System.out.println("Enter the number of share you want to sell");
+				int numberOfShare=scanner.nextInt();
+				if(numberOfShare>userShareFromDb.get(choice-1).getNumberOfShare()) {
+					throw new Exception();
+				}
+				transactionStatus=transactionService.sellTransaction(userShareFromDb.get(choice-1)
+						,numberOfShare);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return transactionStatus;
+	}
 	public static void main(String[] args) {
 
 		App app = new App();

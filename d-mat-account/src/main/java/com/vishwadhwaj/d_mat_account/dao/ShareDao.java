@@ -64,6 +64,12 @@ public class ShareDao implements Dao<Share> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public boolean updateForSell(Share object) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	
 
 	

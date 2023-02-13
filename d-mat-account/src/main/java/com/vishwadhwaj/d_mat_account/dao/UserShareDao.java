@@ -146,6 +146,7 @@ public class UserShareDao implements Dao<UserShare> {
 	@Override
 	public Integer findByObject(UserShare userShare) {
 		Connection connection = db.createConnection();
+		
 		String sql = "select * from user_share where user_id=? and share_id=?";
 		int id = 0;
 		try {
@@ -154,7 +155,7 @@ public class UserShareDao implements Dao<UserShare> {
 			preparedStatement.setInt(2, userShare.getShare().getId());
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				id = resultSet.getInt("id");
+				id=resultSet.getInt("id");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -167,6 +168,29 @@ public class UserShareDao implements Dao<UserShare> {
 			e.printStackTrace();
 		}
 		return id;
+	}
+
+	@Override
+	public boolean updateForSell(UserShare userShare) {
+		Connection connection=db.createConnection();
+		String sql="update account set amount=? where id=?";
+		int i=0,j=0;
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1, userShare.getAccount().getAmount());
+			preparedStatement.setInt(2, userShare.getAccount().getId());
+			i=preparedStatement.executeUpdate();
+			String sqlForuserShareUpdate="update user_share set number_of_shares=? where id=?";
+			PreparedStatement preparedStatementForuserShare=connection.prepareStatement(sqlForuserShareUpdate);
+			preparedStatementForuserShare.setInt(1, userShare.getNumberOfShare());
+			preparedStatementForuserShare.setInt(2, userShare.getId());
+			j=preparedStatementForuserShare.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return i>0 && j>0?true:false;
 	}
 
 }

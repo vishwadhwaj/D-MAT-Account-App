@@ -121,4 +121,10 @@ public class UserDao implements Dao<Account> {
 		return null;
 	}
 
+	@Override
+	public boolean updateForSell(Account object) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

@@ -67,6 +67,12 @@ public class TransactionDao implements Dao<Transaction>{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public boolean updateForSell(Transaction object) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	
 	
 

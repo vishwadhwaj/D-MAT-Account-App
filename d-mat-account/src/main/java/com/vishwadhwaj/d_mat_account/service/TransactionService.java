@@ -48,8 +48,18 @@ public class TransactionService {
 		}
 	}
 	
-	public void sellTransaction() {
-		
+	public boolean sellTransaction(UserShare userShare,int numberOfShare) {
+		int transactionCharge=(int)(((userShare.getShare().getValue()*numberOfShare)*0.5)/100);
+		transactionCharge=transactionCharge>100?transactionCharge:100;
+		int securityTransferTax=(int)(((userShare.getShare().getValue()*numberOfShare)*0.1)/100);
+		if(transactionCharge+securityTransferTax>userShare.getAccount().getAmount()) {
+			return false;
+		}
+		int transactionAmount=(userShare.getShare().getValue()*numberOfShare)-transactionCharge-securityTransferTax;
+		userShare.getAccount().setAmount(userShare.getAccount().getAmount()+transactionAmount);
+		userShare.setNumberOfShare(userShare.getNumberOfShare()-numberOfShare);
+		UserShareDao userShareDao=new UserShareDao();
+		return userShareDao.updateForSell(userShare);
 	}
 	
 	public void viewTransactionReport() {
