@@ -22,7 +22,7 @@ public class UserDao implements Dao<Account> {
 	}
 
 	@Override
-	public Integer save(Account account) {
+	public Account save(Account account) {
 		Connection connection = db.createConnection();
 		int id = 0;
 		try {
@@ -60,7 +60,7 @@ public class UserDao implements Dao<Account> {
 	}
 
 	@Override
-	public Integer findById(Integer accountNumber) {
+	public Account findById(Integer accountNumber) {
 		Connection connection = db.createConnection();
 		int id = 0;
 		String sql = "select * from account where number=?";

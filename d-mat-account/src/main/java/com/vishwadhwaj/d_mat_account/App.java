@@ -3,6 +3,7 @@ package com.vishwadhwaj.d_mat_account;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import com.vishwadhwaj.d_mat_account.dao.UserDao;
 import com.vishwadhwaj.d_mat_account.dao.UserShareDao;
 import com.vishwadhwaj.d_mat_account.entities.Account;
 import com.vishwadhwaj.d_mat_account.entities.Share;
@@ -20,14 +21,14 @@ public class App {
 	AuthenticationService authenticationService;
 	AccountService accountService;
 	TransactionService transactionService;
-	UserShare userShare;
+	Account accountFromDb;
 
 	private App() {
 		scanner = new Scanner(System.in);
 		authenticationService = AuthenticationService.getInstance();
 		accountService = AccountService.getInstance();
 		transactionService = TransactionService.getInstance();
-		userShare = null;
+		accountFromDb = null;
 	}
 
 	void MainMenu() {
@@ -85,25 +86,21 @@ public class App {
 			account.setName(name);
 			account.setAccountNumber(accountNUmber);
 			account.setAmount(amount);
-			id = authenticationService.registerUser(account);
-			UserShareDao userShareDao = new UserShareDao();
-			userShare = userShareDao.getUserShare(id);
+			accountFromDb = authenticationService.registerUser(account);
 		} catch (InvalidNameException e) {
 			System.out.println("Bad Input");
 		} catch (Exception e) {
 			System.out.println("Bad Input");
 			scanner.nextLine();
 		}
-		return id > 0 ? true : false;
+		return accountFromDb!=null ? true : false;
 	}
 
 	boolean login() {
 		System.out.println("Enter your account number");
 		Integer accountNumber = scanner.nextInt();
-		int id = authenticationService.loginUser(accountNumber);
-		UserShareDao userShareDao = new UserShareDao();
-		userShare = userShareDao.getUserShare(id);
-		return id > 0 ? true : false;
+		accountFromDb = authenticationService.loginUser(accountNumber);
+		return accountFromDb!=null ? true : false;
 	}
 
 	void showUserMenu() {
@@ -145,7 +142,12 @@ public class App {
 				}
 				break;
 			case 5:
-				transactionService.sellTransaction();
+				if(sellTransaction()==true) {
+					System.out.println("Transaction Succeeded");
+				}
+				else {
+					System.out.println("Transaction Failed");
+				}
 				break;
 			case 6:
 				transactionService.viewTransactionReport();
@@ -191,7 +193,9 @@ public class App {
 		}
 		return transactionStatus;
 	}
-
+	boolean sellTransaction() {
+		
+	}
 	public static void main(String[] args) {
 
 		App app = new App();
