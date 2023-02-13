@@ -39,8 +39,8 @@ public class UserShareDao implements Dao<UserShare> {
 			}
 			userShareForNew.setAccount(accountFromDb);
 			String sqlForNumberOfShares = "select * from user_share where user_id=?";
-			PreparedStatement preparedStatementForNumberOfShares = connection
-					.prepareStatement(sqlForNumberOfShares,ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+			PreparedStatement preparedStatementForNumberOfShares = connection.prepareStatement(sqlForNumberOfShares,
+					ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			preparedStatementForNumberOfShares.setInt(1, id);
 			ResultSet resultSetForNumberOfShares = preparedStatementForNumberOfShares.executeQuery();
 			if (resultSetForNumberOfShares.next() == false) {
@@ -146,7 +146,7 @@ public class UserShareDao implements Dao<UserShare> {
 	@Override
 	public Integer findByObject(UserShare userShare) {
 		Connection connection = db.createConnection();
-		
+
 		String sql = "select * from user_share where user_id=? and share_id=?";
 		int id = 0;
 		try {
@@ -155,7 +155,7 @@ public class UserShareDao implements Dao<UserShare> {
 			preparedStatement.setInt(2, userShare.getShare().getId());
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				id=resultSet.getInt("id");
+				id = resultSet.getInt("id");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -171,34 +171,64 @@ public class UserShareDao implements Dao<UserShare> {
 	}
 
 	@Override
-	public boolean updateForSell(UserShare userShare,Integer numberOfShare) {
-		Connection connection=db.createConnection();
-		String sql="update account set amount=? where id=?";
-		int i=0,j=0,k=0;
+	public boolean updateForSell(UserShare userShare, Integer numberOfShare) {
+		Connection connection = db.createConnection();
+		String sql = "update account set amount=? where id=?";
+		int i = 0, j = 0, k = 0;
 		try {
-			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, userShare.getAccount().getAmount());
 			preparedStatement.setInt(2, userShare.getAccount().getId());
-			i=preparedStatement.executeUpdate();
-			String sqlForuserShareUpdate="update user_share set number_of_shares=? where id=?";
-			PreparedStatement preparedStatementForuserShare=connection.prepareStatement(sqlForuserShareUpdate);
-			preparedStatementForuserShare.setInt(1, userShare.getNumberOfShare());
-			preparedStatementForuserShare.setInt(2, userShare.getId());
-			j=preparedStatementForuserShare.executeUpdate();
-			String sqlForTransaction="insert into transaction (number_of_share,price,share_id,user_id,type_id) values (?,?,?,?,?)";
-			PreparedStatement preparedStatementForTransaction=connection.prepareStatement(sqlForTransaction);
+			i = preparedStatement.executeUpdate();
+			if (userShare.getNumberOfShare() == 0) {
+				j=delete(userShare.getId());
+			} else {
+				String sqlForuserShareUpdate = "update user_share set number_of_shares=? where id=?";
+				PreparedStatement preparedStatementForuserShare = connection.prepareStatement(sqlForuserShareUpdate);
+				preparedStatementForuserShare.setInt(1, userShare.getNumberOfShare());
+				preparedStatementForuserShare.setInt(2, userShare.getId());
+				j = preparedStatementForuserShare.executeUpdate();
+			}
+			String sqlForTransaction = "insert into transaction (number_of_share,price,share_id,user_id,type_id) values (?,?,?,?,?)";
+			PreparedStatement preparedStatementForTransaction = connection.prepareStatement(sqlForTransaction);
 			preparedStatementForTransaction.setInt(1, numberOfShare);
 			preparedStatementForTransaction.setInt(2, userShare.getShare().getValue());
 			preparedStatementForTransaction.setInt(3, userShare.getShare().getId());
 			preparedStatementForTransaction.setInt(4, userShare.getAccount().getId());
 			preparedStatementForTransaction.setInt(5, 2);
-			k=preparedStatementForTransaction.executeUpdate();
+			k = preparedStatementForTransaction.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		return i>0 && j>0 && k>0?true:false;
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return i > 0 && j > 0 && k > 0 ? true : false;
+	}
+
+	@Override
+	public int delete(Integer id) {
+		int i=0;
+		Connection connection=db.createConnection();
+		String sql="delete from user_share where id=?";
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			i=preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return i;
 	}
 
 }

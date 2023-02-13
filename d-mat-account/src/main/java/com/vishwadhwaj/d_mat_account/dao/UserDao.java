@@ -127,5 +127,11 @@ public class UserDao implements Dao<Account> {
 		return false;
 	}
 
+	@Override
+	public int delete(Integer id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 }

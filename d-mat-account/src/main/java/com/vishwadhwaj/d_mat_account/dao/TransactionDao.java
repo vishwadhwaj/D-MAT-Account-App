@@ -72,6 +72,11 @@ public class TransactionDao implements Dao<Transaction>{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	@Override
+	public int delete(Integer id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	
 	

@@ -69,6 +69,11 @@ public class ShareDao implements Dao<Share> {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	@Override
+	public int delete(Integer id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 
 	

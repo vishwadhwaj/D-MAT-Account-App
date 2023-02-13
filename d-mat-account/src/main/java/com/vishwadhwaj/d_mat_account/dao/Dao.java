@@ -9,4 +9,5 @@ public interface Dao<T> {
 	public int update(T object);
 	public Integer findByObject(T object);
 	public boolean updateForSell(T object,Integer number);
+	public int delete(Integer id);
 }
