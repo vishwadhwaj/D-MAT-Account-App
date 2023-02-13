@@ -122,9 +122,10 @@ public class UserDao implements Dao<Account> {
 	}
 
 	@Override
-	public boolean updateForSell(Account object) {
+	public boolean updateForSell(Account object, Integer number) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	
 }

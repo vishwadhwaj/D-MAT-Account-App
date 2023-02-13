@@ -68,10 +68,11 @@ public class TransactionDao implements Dao<Transaction>{
 		return null;
 	}
 	@Override
-	public boolean updateForSell(Transaction object) {
+	public boolean updateForSell(Transaction object, Integer number) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
 	
 	
 	

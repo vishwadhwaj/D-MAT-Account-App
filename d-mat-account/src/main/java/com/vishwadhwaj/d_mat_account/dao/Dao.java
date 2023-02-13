@@ -8,5 +8,5 @@ public interface Dao<T> {
 	public List<T> findAll();
 	public int update(T object);
 	public Integer findByObject(T object);
-	public boolean updateForSell(T object);
+	public boolean updateForSell(T object,Integer number);
 }

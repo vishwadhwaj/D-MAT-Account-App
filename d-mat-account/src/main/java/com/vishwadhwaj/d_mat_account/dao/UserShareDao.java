@@ -171,7 +171,7 @@ public class UserShareDao implements Dao<UserShare> {
 	}
 
 	@Override
-	public boolean updateForSell(UserShare userShare) {
+	public boolean updateForSell(UserShare userShare,Integer numberOfShare) {
 		Connection connection=db.createConnection();
 		String sql="update account set amount=? where id=?";
 		int i=0,j=0,k=0;
@@ -187,7 +187,7 @@ public class UserShareDao implements Dao<UserShare> {
 			j=preparedStatementForuserShare.executeUpdate();
 			String sqlForTransaction="insert into transaction (number_of_share,price,share_id,user_id,type_id) values (?,?,?,?,?)";
 			PreparedStatement preparedStatementForTransaction=connection.prepareStatement(sqlForTransaction);
-			preparedStatementForTransaction.setInt(1, userShare.getNumberOfShare());
+			preparedStatementForTransaction.setInt(1, numberOfShare);
 			preparedStatementForTransaction.setInt(2, userShare.getShare().getValue());
 			preparedStatementForTransaction.setInt(3, userShare.getShare().getId());
 			preparedStatementForTransaction.setInt(4, userShare.getAccount().getId());

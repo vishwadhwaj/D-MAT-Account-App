@@ -59,7 +59,7 @@ public class TransactionService {
 		userShare.getAccount().setAmount(userShare.getAccount().getAmount()+transactionAmount);
 		userShare.setNumberOfShare(userShare.getNumberOfShare()-numberOfShare);
 		UserShareDao userShareDao=new UserShareDao();
-		return userShareDao.updateForSell(userShare);
+		return userShareDao.updateForSell(userShare,numberOfShare);
 	}
 	
 	public void viewTransactionReport() {
