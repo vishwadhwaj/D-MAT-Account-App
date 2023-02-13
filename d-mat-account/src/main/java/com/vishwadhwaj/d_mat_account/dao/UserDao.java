@@ -115,4 +115,10 @@ public class UserDao implements Dao<Account> {
 		return i;
 	}
 
+	@Override
+	public Integer findByObject(Account object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -109,9 +109,52 @@ public class UserShareDao implements Dao<UserShare> {
 	}
 
 	@Override
-	public int update(UserShare object) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(UserShare userShare) {
+		Connection connection=db.createConnection();
+		String sql="update user_share set number_of_shares=number_of_shares+? where id=?";
+		int i=0;
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1, userShare.getNumberOfShare());
+			preparedStatement.setInt(2, userShare.getId());
+			i=preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return i;
+	}
+
+	@Override
+	public Integer findByObject(UserShare userShare) {
+		Connection connection=db.createConnection();
+		String sql="select * from user_share where user_id=? and share_id=?";
+		int id=0;
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1, userShare.getAccount().getId());
+			preparedStatement.setInt(2, userShare.getShare().getId());
+			ResultSet resultSet=preparedStatement.executeQuery();
+			if(resultSet.next()) {
+				id=resultSet.getInt("id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return id;
 	}
 
 }

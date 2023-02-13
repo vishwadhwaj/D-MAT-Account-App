@@ -62,6 +62,11 @@ public class TransactionDao implements Dao<Transaction>{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	@Override
+	public Integer findByObject(Transaction object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 

@@ -29,10 +29,18 @@ public class TransactionService {
 	
 	public boolean buyTransaction(int transactionAmount,UserShare userShare,Transaction transaction) {
 		int transactionId=transactionDao.save(transaction);
-		int userShareId=userShareDao.save(userShare);
+		int userShareId=0;
+		int i=0;
+		if(userShareDao.findByObject(userShare)>0)
+		userShareId=userShareDao.save(userShare);
+		else {
+			int Id=userShareDao.findByObject(userShare);
+			userShare.setId(Id);
+			i=userShareDao.update(userShare);
+		}
 		userShare.getAccount().setAmount(transactionAmount);
 		int updatedRecord=userDao.update(userShare.getAccount());
-		if(transactionId>0 && userShareId>0 && updatedRecord>0) {
+		if(transactionId>0 && (userShareId>0 || i>0) && updatedRecord>0) {
 			return true;
 		}
 		else {

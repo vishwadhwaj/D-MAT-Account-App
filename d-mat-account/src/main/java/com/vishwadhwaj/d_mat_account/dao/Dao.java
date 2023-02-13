@@ -7,4 +7,5 @@ public interface Dao<T> {
 	public Integer findById(Integer id);
 	public List<T> findAll();
 	public int update(T object);
+	public Integer findByObject(T object);
 }
