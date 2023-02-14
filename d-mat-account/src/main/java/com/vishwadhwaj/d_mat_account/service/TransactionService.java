@@ -1,6 +1,7 @@
 package com.vishwadhwaj.d_mat_account.service;
 
-import java.util.Date;
+
+import java.sql.Date;
 import java.util.List;
 
 import com.vishwadhwaj.d_mat_account.dao.ShareDao;
@@ -67,17 +68,17 @@ public class TransactionService {
 		List<Transaction> transactions=transactionDao.getTransactionsByDate(StartingDate,EndingDate,account);
 		for(int i=0;i<transactions.size();i++) {
 			System.out.print("Date of Transaction:\t");
-			System.out.print(transactions.get(i).getDateOfTransaction());
-			System.out.println("Time Of Transaction:\t");
-			System.out.print(transactions.get(i).getTimeOfTransaction());
-			System.out.println("Share name:\t");
-			System.out.print(transactions.get(i).getShare().getName());
-			System.out.println("Share price:\t");
-			System.out.print(transactions.get(i).getPrice());
-			System.out.println("Number Of Share:\t");
-			System.out.print(transactions.get(i).getNumberOfShare());
-			System.out.println("transaction type:\t");
-			System.out.print(transactions.get(i).getType());
+			System.out.println(transactions.get(i).getDateOfTransaction());
+			System.out.print("Time Of Transaction:\t");
+			System.out.println(transactions.get(i).getTimeOfTransaction());
+			System.out.print("Share name:\t");
+			System.out.println(transactions.get(i).getShare().getName());
+			System.out.print("Share price:\t");
+			System.out.println(transactions.get(i).getPrice());
+			System.out.print("Number Of Share:\t");
+			System.out.println(transactions.get(i).getNumberOfShare());
+			System.out.print("transaction type:\t");
+			System.out.println(transactions.get(i).getType());
 			System.out.println();
 			
 		}

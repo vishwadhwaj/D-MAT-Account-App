@@ -1,5 +1,6 @@
 package com.vishwadhwaj.d_mat_account;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -121,7 +122,6 @@ public class App {
 			System.out.println("4.Buy Transaction");
 			System.out.println("5.Sell Transaction");
 			System.out.println("6.View Transaction Report");
-			scanner.nextLine();
 			System.out.println("Enter your choice:");
 			int choice = scanner.nextInt();
 			switch (choice) {
@@ -235,19 +235,18 @@ public class App {
 
 	void viewTransactionReport() {
 		Account account=authenticationService.getAccount(userId);
-		scanner.nextLine();
 		try {
 			System.out.println("1.Filter by date");
 			System.out.println("2.Filter by share");
 			int choice = scanner.nextInt();
 			if (choice == 1) {
+				scanner.nextLine();
 				System.out.println("Enter Starting Date");
 				String str1=scanner.nextLine();
-				SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
-				Date startingDate=dateFormat.parse(str1);
+				java.sql.Date startingDate=Date.valueOf(str1);
 				System.out.println("Enter Ending Date");
 				String str2=scanner.nextLine();
-				Date endingDate=dateFormat.parse(str2);
+				java.sql.Date endingDate=Date.valueOf(str2);
 				transactionService.viewTransactionReportByDate(startingDate,endingDate,account);
 			} else if (choice == 2) {
 				transactionService.viewTransactionReportByShare();

@@ -1,12 +1,12 @@
 package com.vishwadhwaj.d_mat_account.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.vishwadhwaj.d_mat_account.db.Db;
@@ -95,8 +95,8 @@ public class TransactionDao implements Dao<Transaction> {
 		String sql = "select * from transaction where date_of_transaction between ? and ? and user_id=?";
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, StartingDate.toString());
-			preparedStatement.setString(2, EndingDate.toString());
+			preparedStatement.setDate(1, StartingDate);
+			preparedStatement.setDate(2, EndingDate);
 			preparedStatement.setInt(3, account.getId());
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
@@ -111,12 +111,19 @@ public class TransactionDao implements Dao<Transaction> {
 				PreparedStatement preparedStatementForShare = connection.prepareStatement(sqlForShare);
 				preparedStatementForShare.setInt(1, resultSet.getInt("share_id"));
 				ResultSet resultSetForShare = preparedStatementForShare.executeQuery();
-				while (resultSet.next()) {
+				while (resultSetForShare.next()) {
 					share.setId(resultSetForShare.getInt("id"));
 					share.setName(resultSetForShare.getString("name"));
 					share.setValue(resultSetForShare.getInt("value"));
 				}
 				transaction.setShare(share);
+				String sqlForType="select * from transaction_type where id=?";
+				PreparedStatement preparedStatementForType=connection.prepareStatement(sqlForType);
+				preparedStatementForType.setInt(1, resultSet.getInt("type_id"));
+				ResultSet resultSetForType=preparedStatementForType.executeQuery();
+				while(resultSetForType.next()) {
+					transaction.setType(resultSetForType.getString("name"));
+				}
 				transactions.add(transaction);
 			}
 		} catch (SQLException e) {
