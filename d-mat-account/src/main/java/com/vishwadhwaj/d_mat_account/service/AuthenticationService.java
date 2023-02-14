@@ -19,4 +19,9 @@ public class AuthenticationService {
 	public int loginUser(Integer accountNumber) {
 		return userDao.findById(accountNumber);
 	}
+	
+	public Account getAccount(Integer id) {
+		Account account=userDao.findByUserId(id);
+		return account;
+	}
 }

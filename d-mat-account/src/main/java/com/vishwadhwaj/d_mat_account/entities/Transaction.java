@@ -8,7 +8,7 @@ public class Transaction {
 	private String timeOfTransaction;
 	private Integer numberOfShare;
 	private Integer price;
-	private Integer type;
+	private String type;
 	private Share share;
 	private Account account;
 	
@@ -70,10 +70,13 @@ public class Transaction {
 	public void setPrice(Integer price) {
 		this.price = price;
 	}
-	public Integer getType() {
+
+	public String getType() {
 		return type;
 	}
-	public void setType(Integer type) {
+
+	public void setType(String type) {
 		this.type = type;
 	}
+	
 }

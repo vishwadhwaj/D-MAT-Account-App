@@ -1,5 +1,6 @@
 package com.vishwadhwaj.d_mat_account.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.vishwadhwaj.d_mat_account.dao.ShareDao;
@@ -62,7 +63,26 @@ public class TransactionService {
 		return userShareDao.updateForSell(userShare,numberOfShare);
 	}
 	
-	public void viewTransactionReport() {
+	public void viewTransactionReportByDate(Date StartingDate,Date EndingDate,Account account) {
+		List<Transaction> transactions=transactionDao.getTransactionsByDate(StartingDate,EndingDate,account);
+		for(int i=0;i<transactions.size();i++) {
+			System.out.print("Date of Transaction:\t");
+			System.out.print(transactions.get(i).getDateOfTransaction());
+			System.out.println("Time Of Transaction:\t");
+			System.out.print(transactions.get(i).getTimeOfTransaction());
+			System.out.println("Share name:\t");
+			System.out.print(transactions.get(i).getShare().getName());
+			System.out.println("Share price:\t");
+			System.out.print(transactions.get(i).getPrice());
+			System.out.println("Number Of Share:\t");
+			System.out.print(transactions.get(i).getNumberOfShare());
+			System.out.println("transaction type:\t");
+			System.out.print(transactions.get(i).getType());
+			System.out.println();
+			
+		}
+	}
+	public void viewTransactionReportByShare() {
 		
 	}
 	

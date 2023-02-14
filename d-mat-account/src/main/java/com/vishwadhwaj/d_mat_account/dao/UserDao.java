@@ -133,5 +133,30 @@ public class UserDao implements Dao<Account> {
 		return 0;
 	}
 
-	
+	public Account findByUserId(int id) {
+		Connection connection=db.createConnection();
+		Account account=new Account();
+		String sql="select * from account where id=?";
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				account.setId(resultSet.getInt("id"));
+				account.setName(resultSet.getString("name"));
+				account.setAmount(resultSet.getInt("amount"));
+				account.setAccountNumber(resultSet.getInt("number"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return account;
+	}
 }

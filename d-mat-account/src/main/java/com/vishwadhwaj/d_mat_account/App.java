@@ -1,5 +1,6 @@
 package com.vishwadhwaj.d_mat_account;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -87,7 +88,7 @@ public class App {
 			account.setAccountNumber(accountNUmber);
 			account.setAmount(amount);
 			id = authenticationService.registerUser(account);
-			userId=id;
+			userId = id;
 		} catch (InvalidNameException e) {
 			System.out.println("Bad Input");
 		} catch (Exception e) {
@@ -101,7 +102,7 @@ public class App {
 		System.out.println("Enter your account number");
 		Integer accountNumber = scanner.nextInt();
 		int id = authenticationService.loginUser(accountNumber);
-		userId=id;
+		userId = id;
 		return id > 0 ? true : false;
 	}
 
@@ -144,15 +145,14 @@ public class App {
 				}
 				break;
 			case 5:
-				if(sellTransaction()==true) {
+				if (sellTransaction() == true) {
 					System.out.println("Transaction Succeded");
-				}
-				else {
+				} else {
 					System.out.println("Transaction failed");
 				}
 				break;
 			case 6:
-				transactionService.viewTransactionReport();
+				viewTransactionReport();
 				break;
 			default:
 				System.out.println("Enter valid choice.");
@@ -165,7 +165,7 @@ public class App {
 		UserShareDao userShareDao = new UserShareDao();
 		userShareFromDb = userShareDao.getUserShare(userId);
 		boolean transactionStatus = false;
-		UserShare userShare=new UserShare();
+		UserShare userShare = new UserShare();
 		for (int i = 0; i < shares.size(); i++) {
 			System.out.println(i + 1 + ". " + shares.get(i).getName() + " " + shares.get(i).getValue());
 		}
@@ -181,9 +181,8 @@ public class App {
 			Transaction transaction = new Transaction();
 			transaction.setNumberOfShare(numberOfShare);
 			transaction.setPrice(valueOfShare);
-			transaction.setType(1);
 			transaction.setShare(shares.get(choice - 1));
-			userShare.setShare(shares.get(choice-1));
+			userShare.setShare(shares.get(choice - 1));
 			userShare.setNumberOfShare(numberOfShare);
 			transaction.setAccount(userShareFromDb.get(0).getAccount());
 			userShare.setAccount(userShareFromDb.get(0).getAccount());
@@ -199,44 +198,67 @@ public class App {
 		}
 		return transactionStatus;
 	}
-	
+
 	boolean sellTransaction() {
-		UserShareDao userShareDao=new UserShareDao();
-		boolean transactionStatus=false;
-		userShareFromDb=userShareDao.getUserShare(userId);
-		UserShare userShare=new UserShare();
-		if(userShareFromDb.get(0).getId()<=0) {
+		UserShareDao userShareDao = new UserShareDao();
+		boolean transactionStatus = false;
+		userShareFromDb = userShareDao.getUserShare(userId);
+		UserShare userShare = new UserShare();
+		if (userShareFromDb.get(0).getId() <= 0) {
 			System.out.println("You have no share to sell");
-		}
-		else {
+		} else {
 			try {
-				for(int i=0;i<userShareFromDb.size();i++) {
-					System.out.println(i+1+" "
-							+userShareFromDb.get(i).getShare().getName()+" "+
-							userShareFromDb.get(i).getNumberOfShare()+" "+
-							userShareFromDb.get(i).getShare().getValue()
-							);
+				for (int i = 0; i < userShareFromDb.size(); i++) {
+					System.out.println(i + 1 + " " + userShareFromDb.get(i).getShare().getName() + " "
+							+ userShareFromDb.get(i).getNumberOfShare() + " "
+							+ userShareFromDb.get(i).getShare().getValue());
 				}
 				scanner.nextLine();
 				System.out.println("Select the share you want to sell:");
-				int choice=scanner.nextInt();
-				if(choice>userShareFromDb.size() || choice<1) {
+				int choice = scanner.nextInt();
+				if (choice > userShareFromDb.size() || choice < 1) {
 					throw new Exception();
 				}
 				System.out.println("Enter the number of share you want to sell");
-				int numberOfShare=scanner.nextInt();
-				if(numberOfShare>userShareFromDb.get(choice-1).getNumberOfShare()) {
+				int numberOfShare = scanner.nextInt();
+				if (numberOfShare > userShareFromDb.get(choice - 1).getNumberOfShare()) {
 					throw new Exception();
 				}
-				transactionStatus=transactionService.sellTransaction(userShareFromDb.get(choice-1)
-						,numberOfShare);
-			} catch(Exception e) {
+				transactionStatus = transactionService.sellTransaction(userShareFromDb.get(choice - 1), numberOfShare);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 		return transactionStatus;
 	}
+
+	void viewTransactionReport() {
+		Account account=authenticationService.getAccount(userId);
+		scanner.nextLine();
+		try {
+			System.out.println("1.Filter by date");
+			System.out.println("2.Filter by share");
+			int choice = scanner.nextInt();
+			if (choice == 1) {
+				System.out.println("Enter Starting Date");
+				String str1=scanner.nextLine();
+				SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+				Date startingDate=dateFormat.parse(str1);
+				System.out.println("Enter Ending Date");
+				String str2=scanner.nextLine();
+				Date endingDate=dateFormat.parse(str2);
+				transactionService.viewTransactionReportByDate(startingDate,endingDate,account);
+			} else if (choice == 2) {
+				transactionService.viewTransactionReportByShare();
+			} else if (choice > 2 || choice < 1) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String[] args) {
 
 		App app = new App();
